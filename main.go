@@ -34,7 +34,7 @@ func main() {
 		})
 	})
 
-	r.Run(":9002")
+	r.Run(":8080")
 }
 
 func pageIndex(c *gin.Context) {

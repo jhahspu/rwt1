@@ -12,6 +12,6 @@ COPY ./templates ./
 ADD templates ./templates
 COPY --from=builder /app/main .
 
-EXPOSE 9002
+EXPOSE 8080
 
 CMD ["/app/main"]
