@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,15 @@ func main() {
 		})
 	})
 
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	err := r.Run(":" + port)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func pageIndex(c *gin.Context) {
