@@ -1,0 +1,60 @@
+{{ template "header" . }}
+
+<h1>Index</h1>
+
+<p style="color: crimson;">{{ if .message }} {{ .message }} {{ end }}</p>
+
+<form action="/" method="post">
+  {{ .csrf }}
+  <input type="text" name="username" id="username">
+  <input type="submit" value="Submit">
+</form>
+
+<hr>
+
+<input type="search" name="search" id="search">
+
+<p data-res></p>
+
+<script>
+  const csrfToken = document.getElementsByName("gorilla.csrf.Token")[0].value
+
+  const searchInput = document.querySelector("#search")
+  searchInput.addEventListener("keyup", (e) => {
+    searchChange(e.target.value)
+  })
+
+  const debounce = (cb, delay = 1000) => {
+    let timeout
+    return (...args) => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        cb(...args)
+      }, delay)
+    }
+  }
+
+  const searchChange = debounce((text) => {
+    if (text !== "") makeRequest(text).then(res => {
+                                        console.log(res)
+                                        document.querySelector("[data-res]").textContent = res.message
+                                      })
+  })
+
+  const makeRequest = async (text) => {
+    let res = await fetch(`/api/test`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken,
+      },
+      body: JSON.stringify({"text": text})
+    })
+
+    let x = await res.json()
+    return x
+  }
+
+</script>
+
+{{ template "footer" . }}
